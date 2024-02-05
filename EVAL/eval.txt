@@ -1,0 +1,32 @@
+Project Grades - Each Milestone out of 100%
+
+P1
+
+M1 - 90 (regrade) - prints single digits now, except for 0 still;
+M2 - 90 (regrade) - added a few more test cases, but would still want to see more, and more variety; 
+M3 - 90 (regrade) - still not that many test cases;
+
+Extra: 50
+
+P2
+
+M1 - 75 (regrade) - fails in concat -> based off console out seems to be infinitely concating; still lacking decent test cases
+M2 - 95 - no mem leaks in valgrind, but lots of invalid writes of size 1;
+M3 - 90 - ok num of test cases, but split should work with any char not just " " and "-";
+M4 - 100
+
+P3
+
+M1 - 100 - you can just assert directly the stackObj.pop == expectedVal in your asserts, since pop returns T;
+M2 - 90 - expected own test/data txt file;
+M3 - 95 - spacing/formatting for assembly wrong -> spaces not tabs;
+
+Extra: 95
+
+P4
+
+M1 - 90 (regrade)
+M2 - 90 (regrade)
+M3 - 100
+
+Extra: 100
