@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++" filename="ASTree.cpp"><comment type="line">//</comment>
+<comment type="line">//  ASTree.cpp</comment>
+<comment type="line">//  Abstract Syntax Tree</comment>
+<comment type="line">//</comment>
+<comment type="line">//  Created by Jonathan Maletic</comment>
+<comment type="line">//  Copyright 2022 Kent State University. All rights reserved.</comment>
+<comment type="line">//  Fall 2022</comment>
+<comment type="line">//  srcML 1.0</comment>
+<comment type="line">//</comment>
+<comment type="line">//  Modified by: Jason Graham</comment>
+<comment type="line">//</comment>
+<comment type="line">//</comment>
+
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"ASTree.hpp"</cpp:file></cpp:include>
+
+
+<comment type="line">// Copy constructor for srcML</comment>
+<comment type="line">//</comment>
+<constructor><name><name>srcML</name><operator>::</operator><name>srcML</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>srcML</name><modifier>&amp;</modifier></type> <name>actual</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name>header</name> <operator>=</operator> <name><name>actual</name><operator>.</operator><name>header</name></name></expr>;</expr_stmt>
+    <if_stmt><if>if <condition>(<expr><name><name>actual</name><operator>.</operator><name>tree</name></name></expr>)</condition><block type="pseudo"><block_content>
+        <expr_stmt><expr><name>tree</name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><operator>*</operator><operator>(</operator><name><name>actual</name><operator>.</operator><name>tree</name></name><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></if>
+    <else>else<block type="pseudo"><block_content>
+        <expr_stmt><expr><name>tree</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt></block_content></block></else></if_stmt>
+</block_content>}</block></constructor>
+
+<comment type="line">// Constant time swap for srcML</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>srcML</name><operator>::</operator><name>swap</name></name><parameter_list>(<parameter><decl><type><name>srcML</name><modifier>&amp;</modifier></type> <name>b</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>t_header</name> <init>= <expr><name>header</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>header</name> <operator>=</operator> <name><name>b</name><operator>.</operator><name>header</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>b</name><operator>.</operator><name>header</name></name> <operator>=</operator> <name>t_header</name></expr>;</expr_stmt>
+    
+    <decl_stmt><decl><type><name>AST</name> <modifier>*</modifier></type><name>temp</name> <init>= <expr><name>tree</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>tree</name> <operator>=</operator> <name><name>b</name><operator>.</operator><name>tree</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>b</name><operator>.</operator><name>tree</name></name> <operator>=</operator> <name>temp</name></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line">// Assignment for srcML</comment>
+<comment type="line">//</comment>
+<function type="operator"><type><name>srcML</name><modifier>&amp;</modifier></type> <name><name>srcML</name><operator>::</operator><name>operator<name>=</name></name></name><parameter_list>(<parameter><decl><type><name>srcML</name></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name>swap</name><argument_list>(<argument><expr><name>rhs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><operator>*</operator><name>this</name></expr>;</return>
+</block_content>}</block></function>
+
+<comment type="line">// Reads in and constructs a srcML object.</comment>
+<comment type="line">//</comment>
+<function type="operator"><type><name><name>std</name><operator>::</operator><name>istream</name></name><modifier>&amp;</modifier></type> <name>operator<name>&gt;&gt;</name></name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>istream</name></name><modifier>&amp;</modifier></type> <name>in</name></decl></parameter>, <parameter><decl><type><name>srcML</name><modifier>&amp;</modifier></type> <name>src</name></decl></parameter>)</parameter_list><block>{<block_content>
+    <decl_stmt><decl><type><name>char</name></type> <name>ch</name></decl>;</decl_stmt>
+    <if_stmt><if>if <condition>(<expr><operator>!</operator><call><name><name>in</name><operator>.</operator><name>eof</name></name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><name>in</name> <operator>&gt;&gt;</operator> <name>ch</name></expr>;</expr_stmt></block_content></block></if></if_stmt>
+    <expr_stmt><expr><name><name>src</name><operator>.</operator><name>header</name></name> <operator>=</operator> <call><name>readUntil</name><argument_list>(<argument><expr><name>in</name></expr></argument>, <argument><expr><literal type="char">'&gt;'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if_stmt><if>if <condition>(<expr><operator>!</operator><call><name><name>in</name><operator>.</operator><name>eof</name></name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><name>in</name> <operator>&gt;&gt;</operator> <name>ch</name></expr>;</expr_stmt></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name><name>src</name><operator>.</operator><name>tree</name></name></expr>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><operator>delete</operator> <name><name>src</name><operator>.</operator><name>tree</name></name></expr>;</expr_stmt></block_content></block></if></if_stmt>
+    <expr_stmt><expr><name><name>src</name><operator>.</operator><name>tree</name></name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>category</name></expr></argument>, <argument><expr><call><name>readUntil</name><argument_list>(<argument><expr><name>in</name></expr></argument>, <argument><expr><literal type="char">'&gt;'</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>src</name><operator>.</operator><name>tree</name><operator>-&gt;</operator><name>read</name></name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><name>in</name></expr>;</return>
+</block_content>}</block></function>
+
+<comment type="line">// Prints out a srcML object</comment>
+<comment type="line">//</comment>
+<function type="operator"><type><name><name>std</name><operator>::</operator><name>ostream</name></name><modifier>&amp;</modifier></type> <name>operator<name>&lt;&lt;</name></name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>ostream</name></name><modifier>&amp;</modifier></type> <name>out</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>srcML</name><modifier>&amp;</modifier></type> <name>src</name></decl></parameter>)</parameter_list><block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name><name>src</name><operator>.</operator><name>tree</name></name></expr>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><call><name><name>src</name><operator>.</operator><name>tree</name><operator>-&gt;</operator><name>print</name></name><argument_list>(<argument><expr><name>out</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></if></if_stmt>
+    <return>return <expr><name>out</name></expr>;</return>
+</block_content>}</block></function>
+
+<comment type="line">//  Adds in the includes and profile object declarations</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>srcML</name><operator>::</operator><name>mainHeader</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>,
+                       <parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>fileName</name></decl></parameter>    )</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>tree</name><operator>-&gt;</operator><name>mainHeader</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>, <argument><expr><name>fileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line">//  Adds in the includes and declares profile object declarations</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>srcML</name><operator>::</operator><name>fileHeader</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>tree</name><operator>-&gt;</operator><name>fileHeader</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line">// Adds in the report to the main</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>srcML</name><operator>::</operator><name>mainReport</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>tree</name><operator>-&gt;</operator><name>mainReport</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line" format="doxygen">///  Inserts a profile.count() into each function body.</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>srcML</name><operator>::</operator><name>functionCount</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>tree</name><operator>-&gt;</operator><name>functionCount</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line">// Inserts a profile.count() for each statement.</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>srcML</name><operator>::</operator><name>lineCount</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>tree</name><operator>-&gt;</operator><name>lineCount</name></name><argument_list>(<argument><expr><name>profileName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+    
+
+<comment type="line">//</comment>
+<comment type="line">//AST::</comment>
+<comment type="line">//</comment>
+
+
+<comment type="line">// Constructs a category, token, or whitespace node for the tree.</comment>
+<comment type="line">//</comment>
+<constructor><name><name>AST</name><operator>::</operator><name>AST</name></name><parameter_list>(<parameter><decl><type><name>nodes</name></type> <name>t</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>s</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name>nodeType</name> <operator>=</operator> <name>t</name></expr>;</expr_stmt>
+    <switch>switch <condition>(<expr><name>nodeType</name></expr>)</condition> <block>{<block_content>
+        <case>case <expr><name>category</name></expr>:</case>
+            <expr_stmt><expr><name>tag</name> <operator>=</operator> <name>s</name></expr>;</expr_stmt>
+            <break>break;</break>
+        <case>case <expr><name>token</name></expr>:</case>
+            <expr_stmt><expr><name>text</name> <operator>=</operator> <call><name>unEscape</name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <break>break;</break>
+        <case>case <expr><name>whitespace</name></expr>:</case>
+            <expr_stmt><expr><name>text</name> <operator>=</operator> <name>s</name></expr>;</expr_stmt>
+            <break>break;</break>
+    </block_content>}</block></switch>
+</block_content>}</block></constructor>
+
+
+<comment type="line">// Destructor for AST</comment>
+<comment type="line">//</comment>
+<destructor><name><name>AST</name><operator>::</operator><name>~AST</name></name><parameter_list>()</parameter_list> <block>{<block_content>
+    <comment type="line">//TODO: IMPLEMENT</comment>
+    <if_stmt><if>if<condition>(<expr><operator>!</operator><call><name><name>child</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content>
+        <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>list</name><argument_list type="generic">&lt;<argument><expr><name>AST</name><modifier>*</modifier></expr></argument>&gt;</argument_list><operator>::</operator><name>iterator</name></name></type> <name>ptr</name> <init>= <expr><call><name><name>child</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <while>while<condition>(<expr><name>ptr</name> <operator>!=</operator> <call><name><name>child</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content>
+            <expr_stmt><expr><operator>delete</operator> <operator>*</operator><name>ptr</name></expr>;</expr_stmt>
+            <expr_stmt><expr><operator>++</operator><name>ptr</name></expr>;</expr_stmt>
+        </block_content>}</block></while>
+    </block_content>}</block></if></if_stmt>
+    <comment type="line">//Recursively traverse tree and delete from bottom up</comment>
+</block_content>}</block></destructor>
+
+
+<comment type="line">// Copy Constructor for AST</comment>
+<comment type="line">//</comment>
+<constructor><name><name>AST</name><operator>::</operator><name>AST</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>AST</name><modifier>&amp;</modifier></type> <name>actual</name></decl></parameter>)</parameter_list> <member_init_list>: <call><name>AST</name><argument_list>()</argument_list></call> </member_init_list><block>{<block_content>
+    <comment type="line">//TODO: IMPLEMENT</comment>
+    <expr_stmt><expr><name>nodeType</name> <operator>=</operator> <name><name>actual</name><operator>.</operator><name>nodeType</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>tag</name> <operator>=</operator> <name><name>actual</name><operator>.</operator><name>tag</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>closeTag</name> <operator>=</operator> <name><name>actual</name><operator>.</operator><name>closeTag</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>text</name> <operator>=</operator> <name><name>actual</name><operator>.</operator><name>text</name></name></expr>;</expr_stmt>
+    <if_stmt><if>if<condition>(<expr><call><name><name>actual</name><operator>.</operator><name>child</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content> <return>return;</return></block_content></block></if></if_stmt>
+    <for>for<control>(<init><decl><type><name><name>std</name><operator>::</operator><name>list</name><argument_list type="generic">&lt;<argument><expr><name>AST</name><operator>*</operator></expr></argument>&gt;</argument_list><operator>::</operator><name>const_iterator</name></name></type> <name>i</name> <init>= <expr><call><name><name>actual</name><operator>.</operator><name>child</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>!=</operator> <call><name><name>actual</name><operator>.</operator><name>child</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><operator>*</operator><operator>*</operator><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// This line may be wrong if anything is</comment>
+    </block_content>}</block></for>
+
+
+    <comment type="line">//Recursively traverse actual and</comment>
+    <comment type="line">//make a copy of each node putting it</comment>
+    <comment type="line">//into this.</comment>
+</block_content>}</block></constructor>
+
+
+<comment type="line">// Constant time swap for AST</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>AST</name><operator>::</operator><name>swap</name></name><parameter_list>(<parameter><decl><type><name>AST</name><modifier>&amp;</modifier></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name>AST</name></type> <name>temp</name><argument_list>(<argument><expr><name>rhs</name></expr></argument>)</argument_list></decl>;</decl_stmt>
+
+    <comment type="line">//Swap basic data</comment>
+    <expr_stmt><expr><name><name>rhs</name><operator>.</operator><name>nodeType</name></name> <operator>=</operator> <name>nodeType</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>rhs</name><operator>.</operator><name>tag</name></name>      <operator>=</operator> <name>tag</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>rhs</name><operator>.</operator><name>closeTag</name></name> <operator>=</operator> <name>closeTag</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>rhs</name><operator>.</operator><name>text</name></name>     <operator>=</operator> <name>text</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>nodeType</name>     <operator>=</operator> <name><name>temp</name><operator>.</operator><name>nodeType</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>tag</name>          <operator>=</operator> <name><name>temp</name><operator>.</operator><name>tag</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>closeTag</name>     <operator>=</operator> <name><name>temp</name><operator>.</operator><name>closeTag</name></name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>text</name>         <operator>=</operator> <name><name>temp</name><operator>.</operator><name>text</name></name></expr>;</expr_stmt>
+
+    <comment type="line">//Swap tree structure</comment>
+    <expr_stmt><expr><name><name>rhs</name><operator>.</operator><name>child</name></name> <operator>=</operator> <name>child</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>child</name> <operator>=</operator> <name><name>temp</name><operator>.</operator><name>child</name></name></expr>;</expr_stmt>
+    <comment type="line">//Swap all the top level childern (pointers to AST)</comment>
+</block_content>}</block></function>
+
+<comment type="line" format="doxygen">/// Assignment for AST</comment>
+<comment type="line">//</comment>
+<function type="operator"><type><name>AST</name><modifier>&amp;</modifier></type> <name><name>AST</name><operator>::</operator><name>operator<name>=</name></name></name><parameter_list>(<parameter><decl><type><name>AST</name></type> <name>rhs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name>swap</name><argument_list>(<argument><expr><name>rhs</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <return>return <expr><operator>*</operator><name>this</name></expr>;</return>
+</block_content>}</block></function>
+
+
+<comment type="line">// REQUIRES: this-&gt;nodetype == category &amp;&amp; tagName is valid srcML tag</comment>
+<comment type="line">// ENSURES: RETVAL == this-&gt;child[i] where this-&gt;child[i]-&gt;tag == tagName</comment>
+<comment type="line">//</comment>
+<comment type="line">// IMPORTANT for milestone 2 and 3</comment>
+<comment type="line">//</comment>
+<function><type><name>AST</name><modifier>*</modifier></type> <name><name>AST</name><operator>::</operator><name>getChild</name></name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>tagName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>list</name><argument_list type="generic">&lt;<argument><expr><name>AST</name><modifier>*</modifier></expr></argument>&gt;</argument_list><operator>::</operator><name>iterator</name></name></type> <name>ptr</name> <init>= <expr><call><name><name>child</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <while>while <condition>(<expr><operator>(</operator><name><operator>(</operator><operator>*</operator><name>ptr</name><operator>)</operator><operator>-&gt;</operator><name>tag</name></name> <operator>!=</operator> <name>tagName</name><operator>)</operator> <operator>&amp;&amp;</operator> <operator>(</operator><name>ptr</name> <operator>!=</operator> <call><name><name>child</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call><operator>)</operator></expr>)</condition> <block>{<block_content>
+         <expr_stmt><expr><operator>++</operator><name>ptr</name></expr>;</expr_stmt>
+    </block_content>}</block></while>
+    <return>return <expr><operator>*</operator><name>ptr</name></expr>;</return>
+</block_content>}</block></function>
+
+
+<comment type="line">// REQUIRES: this-&gt;tag == "name"</comment>
+<comment type="line">// Returns the full name of a &lt;name&gt; node</comment>
+<comment type="line">//  There are two types of names in srcML.  A simple name (e.g., foo) and a</comment>
+<comment type="line">//   name with a scope (e.g., std::bar).  This returns the correct</comment>
+<comment type="line">//   one from &lt;name&gt; AST node.</comment>
+<comment type="line">//</comment>
+<comment type="line">// IMPORTANT for milestone 3</comment>
+<comment type="line">//</comment>
+<function><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name><name>AST</name><operator>::</operator><name>getName</name></name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<block_content>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>result</name></decl>;</decl_stmt>
+    <if_stmt><if>if <condition>(<expr><call><name><name>child</name><operator>.</operator><name>front</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><name>tag</name> <operator>!=</operator> <literal type="string">"name"</literal></expr>)</condition> <block>{<block_content>
+        <expr_stmt><expr><name>result</name> <operator>=</operator> <call><name><name>child</name><operator>.</operator><name>front</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><name>text</name></expr>;</expr_stmt>   <comment type="line">//A simple name (e.g., main)</comment>
+    </block_content>}</block></if> <else>else <block>{<block_content>                            <comment type="line">//A complex name (e.g., stack::push).</comment>
+        <expr_stmt><expr><name>result</name> <operator>=</operator> <call><name><name>child</name><operator>.</operator><name>front</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name><name>child</name><operator>.</operator><name>front</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><name>text</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name>result</name> <operator>+=</operator> <literal type="string">"::"</literal></expr>;</expr_stmt>
+        <expr_stmt><expr><name>result</name> <operator>+=</operator> <call><name><name>child</name><operator>.</operator><name>back</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name><name>child</name><operator>.</operator><name>front</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><name>text</name></expr>;</expr_stmt>
+    </block_content>}</block></else></if_stmt>
+    <return>return <expr><name>result</name></expr>;</return>
+</block_content>}</block></function>
+
+
+<comment type="line">//  Adds above the main, in the main file:</comment>
+<comment type="line">//  1. #include "profile.hpp"</comment>
+<comment type="line">//  2. All needed profile object declarations</comment>
+<comment type="line">//      example: profile foo_cpp("foo.cpp");</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>AST</name><operator>::</operator><name>mainHeader</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>,
+                     <parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>fileName</name></decl></parameter>     )</parameter_list> <block>{<block_content>
+
+    <comment type="line">//Skip down a couple lines or find main and put it before it</comment>
+    <comment type="line">//Add a node with #include "profile.hpp"</comment>
+
+    <comment type="line">//Quick explanation of findings</comment>
+    <comment type="line">//Top level AST contains a list of all things within the file, functions and comments</comment>
+    <comment type="line">//every other pointer is an account of the whitespace between readable lines</comment>
+    <comment type="line">//Traversing is difficult</comment>
+
+    <comment type="line">//Goal is to find main... back step by one line</comment>
+    <comment type="line">//then insert the line(s) I need for main.cpp</comment>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>list</name><argument_list type="generic">&lt;<argument><expr><name>AST</name><modifier>*</modifier></expr></argument>&gt;</argument_list><operator>::</operator><name>iterator</name></name></type> <name>ptr</name> <init>= <expr><call><name><name>child</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <comment type="line">//Find main function</comment>
+    <while>while<condition>(<expr><name><operator>(</operator><operator>*</operator><name>ptr</name><operator>)</operator><operator>-&gt;</operator><name>tag</name></name> <operator>!=</operator> <literal type="string">"function"</literal> <operator>&amp;&amp;</operator> <name>ptr</name> <operator>!=</operator> <call><name><name>child</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content><expr_stmt><expr><operator>++</operator><name>ptr</name></expr>;</expr_stmt> </block_content>}</block></while> <comment type="line">// || (*ptr)-&gt;getChild("name")-&gt;getName() != "main"</comment>
+
+    <comment type="line">//Setup new token</comment>
+    <decl_stmt><decl><type><name>AST</name><modifier>*</modifier></type> <name>include</name> <init>= <expr><operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>token</name></expr></argument>, <argument><expr><literal type="string">"#include \"profile.hpp\"\n"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>, <argument><expr><name>include</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <for>for<control>(<init><decl><type><name>unsigned</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>profileName</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{<block_content>
+        <expr_stmt><expr><name>include</name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>token</name></expr></argument>, <argument><expr><operator>(</operator><literal type="string">"profile "</literal> <operator>+</operator> <name><name>profileName</name><index>[<expr><name>i</name></expr>]</index></name> <operator>+</operator> <literal type="string">"(\""</literal> <operator>+</operator> <name><name>fileName</name><index>[<expr><name>i</name></expr>]</index></name> <operator>+</operator> <literal type="string">"\");\n"</literal><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>, <argument><expr><name>include</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    </block_content>}</block></for>
+    <expr_stmt><expr><operator>(</operator><operator>*</operator><operator>--</operator><name>ptr</name><operator>)</operator><operator>-&gt;</operator><name>text</name> <operator>+=</operator> <literal type="char">'\n'</literal></expr>;</expr_stmt>
+
+    <comment type="line">//---------------------------------------------------------------------</comment>
+    <comment type="line">//---------------------------------------------------------------------</comment>
+    <comment type="line">// All of the comments for the rest of this function is simply me</comment>
+    <comment type="line">// (Unneccessaraly) creating my own .XML ast to insert one line of text</comment>
+    <comment type="line">// (Supper over complicating the code)</comment>
+    <comment type="line">// and beneath that is me having fun learning how exactly the AST</comment>
+    <comment type="line">// data structure opperates</comment>
+
+
+
+
+    
+    <comment type="line">//Construct the AST that will be inserted to main</comment>
+    <comment type="block">/*AST* temp = new AST(nodes(category), "cpp:include");
+    temp-&gt;child.push_back(new AST(nodes(token), "#"));
+    temp-&gt;child.push_back(new AST(nodes(category), "cpp:directive"));
+        temp-&gt;child.back()-&gt;child.push_back(new AST(nodes(token), "include"));
+    temp-&gt;child.push_back(new AST(nodes(whitespace), ))*/</comment>
+
+
+
+
+    <comment type="block">/*int i = 0;
+    std::list&lt;AST*&gt;::iterator ptr = child.begin();
+    while(ptr != child.end()) { // (*ptr)-&gt;getChild("function")-&gt;getName() != "main" &amp;&amp; 
+
+        std::cout &lt;&lt; "i: " &lt;&lt; i &lt;&lt; ", ";
+
+        if(i % 2 == 0) {
+            std::cout &lt;&lt; (*ptr)-&gt;tag &lt;&lt; ", " &lt;&lt; (*ptr)-&gt;nodeType &lt;&lt; std::endl;
+        } else {
+            std::cout &lt;&lt; (*ptr)-&gt;tag &lt;&lt; ", " &lt;&lt; (*ptr)-&gt;nodeType &lt;&lt; std::endl;
+        }
+
+        if(i == 16) {
+            std::cout &lt;&lt; (*ptr)-&gt;child.size() &lt;&lt; std::endl;
+            std::cout &lt;&lt; "-------------------------" &lt;&lt; std::endl;
+            int j = 0;
+            std::list&lt;AST*&gt;::iterator include = (*ptr)-&gt;child.begin();
+            while(include != (*ptr)-&gt;child.end()) {
+                std::cout &lt;&lt; "j: " &lt;&lt; j &lt;&lt; ", ";
+                std::cout &lt;&lt; (*include)-&gt;tag &lt;&lt; ", " &lt;&lt; (*include)-&gt;nodeType &lt;&lt; std::endl;
+
+                ++include;
+                ++j;
+            }
+            std::cout &lt;&lt; "-------------------------" &lt;&lt; std::endl;
+        }
+
+        if((*ptr)-&gt;tag == "function") { // &amp;&amp; (*ptr)-&gt;getChild("name")-&gt;text == "main"
+            std::cout &lt;&lt; "entered a function: " &lt;&lt; (*ptr)-&gt;getChild("name")-&gt;getName() &lt;&lt; std::endl;
+        }
+
+        std::cout &lt;&lt; std::endl;
+
+        ++ptr;
+        ++i;
+    }*/</comment>
+
+    <comment type="line">//For each file profile name, add a node with a profile</comment>
+    <comment type="line">//   declaration "profile foo_cpp("foo.cpp");"</comment>
+</block_content>}</block></function>
+
+
+<comment type="line">//  Adds in each file (except main file):</comment>
+<comment type="line">//  1. #include "profile.hpp"</comment>
+<comment type="line">//  2. All needed external profile object declarations</comment>
+<comment type="line">//      example: extern profile thisfile_cpp;</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>AST</name><operator>::</operator><name>fileHeader</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <comment type="line">//TODO: IMPLEMENT</comment>
+    <comment type="line">//Skip down a couple lines or find first function and put it before it</comment>
+    <comment type="line">//Add #include "profile.hpp"</comment>
+    <comment type="line">//Add in the external declaration for that file "extern profile foo_cpp;"</comment>
+    
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>list</name><argument_list type="generic">&lt;<argument><expr><name>AST</name><modifier>*</modifier></expr></argument>&gt;</argument_list><operator>::</operator><name>iterator</name></name></type> <name>ptr</name> <init>= <expr><call><name><name>child</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <comment type="line">//Find function</comment>
+    <while>while<condition>(<expr><name><operator>(</operator><operator>*</operator><name>ptr</name><operator>)</operator><operator>-&gt;</operator><name>tag</name></name> <operator>!=</operator> <literal type="string">"function"</literal> <operator>&amp;&amp;</operator> <name>ptr</name> <operator>!=</operator> <call><name><name>child</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content><expr_stmt><expr><operator>++</operator><name>ptr</name></expr>;</expr_stmt> </block_content>}</block></while>
+
+    <comment type="line">//Setup new token</comment>
+    <decl_stmt><decl><type><name>AST</name><modifier>*</modifier></type> <name>include</name> <init>= <expr><operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>token</name></expr></argument>, <argument><expr><literal type="string">"#include \"profile.hpp\"\n"</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>, <argument><expr><name>include</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <expr_stmt><expr><name>include</name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>token</name></expr></argument>, <argument><expr><operator>(</operator><literal type="string">"extern profile "</literal> <operator>+</operator> <name>profileName</name> <operator>+</operator> <literal type="string">";\n"</literal><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>, <argument><expr><name>include</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><operator>(</operator><operator>*</operator><operator>--</operator><name>ptr</name><operator>)</operator><operator>-&gt;</operator><name>text</name> <operator>+=</operator> <literal type="char">'\n'</literal></expr>;</expr_stmt>
+
+</block_content>}</block></function>
+
+
+<comment type="line">// Adds in the report to the main file</comment>
+<comment type="line">// Assumes only one return in the main</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>AST</name><operator>::</operator><name>mainReport</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    
+    <comment type="line">//TODO: IMPLEMENT</comment>
+    <comment type="line">//Find the function with name of "main" in the file</comment>
+    <comment type="line">// -Get the "block" node of this function</comment>
+    <comment type="line">// -Set an iterator to the child.end() of "block"</comment>
+    <comment type="line">// -Decrement it once (to skip the "}")</comment>
+    <comment type="line">// -Search backwards for a "return" tag</comment>
+    <comment type="line">// -Insert the report statements before the return</comment>
+
+</block_content>}</block></function>
+
+
+<comment type="line">// Adds a node to the function block to count the times each function</comment>
+<comment type="line">//  is executed</comment>
+<comment type="line">//  Assumes no nested functions</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>AST</name><operator>::</operator><name>functionCount</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    
+    <comment type="line">//TODO: IMPLEMENT</comment>
+    <comment type="line">// for each child in the "unit"</comment>
+    <comment type="line">//     if child is a function, constructor, destructor</comment>
+    <comment type="line">//        Find the function name (use AST::getName())</comment>
+    <comment type="line">//        Find &lt;block&gt;, then find &lt;block_content&gt;</comment>
+    <comment type="line">//        Insert the count as first child in &lt;block_content&gt;</comment>
+    <comment type="line">//        Example: main1_cpp.count(__LINE__, "main");</comment>
+
+</block_content>}</block></function>
+
+
+<comment type="line">// Adds in a node to count the number of times each statement is executed</comment>
+<comment type="line">//   Do not count breaks, returns, throw, declarations, etc.</comment>
+<comment type="line">//   Assumes all construts (for, while, if) have an explicit block { }</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name><name>AST</name><operator>::</operator><name>lineCount</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>profileName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    
+    <comment type="line">//TODO: IMPLEMENT</comment>
+    <comment type="line">// Recursively check for expr_stmt within all category nodes &lt;block&gt;</comment>
+    <comment type="line">// Very similar to AST::print</comment>
+    <comment type="line">// For each child:</comment>
+    <comment type="line">//   If it is a category node</comment>
+    <comment type="line">//       If it is a expr_stmt insert a count after it</comment>
+    <comment type="line">//          Example: foo_cpp.count(__LINE__);</comment>
+    <comment type="line">//       Else call lineCount if not a stop tag  See isStopTag()</comment>
+    <comment type="line">//   Else (token or whitespace) do nothing</comment>
+    
+</block_content>}</block></function>
+
+<comment type="line">// Returns TRUE if the tag (syntactic category) is not to be profiled</comment>
+<comment type="line">//</comment>
+<comment type="line">// IMPORTANT for milestone 3</comment>
+<comment type="line">//</comment>
+<function><type><name>bool</name></type> <name>isStopTag</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>tag</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"condition"</literal></expr>             )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt> <comment type="line">//Remove for challenge</comment>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"type"</literal></expr>                  )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"name"</literal></expr>                  )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"return"</literal></expr>                )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"break"</literal></expr>                 )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"continue"</literal></expr>              )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"parameter_list"</literal></expr>        )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"decl_stmt"</literal></expr>             )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"argument_list"</literal></expr>         )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"init"</literal></expr>                  )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"cpp:include"</literal></expr>           )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"macro"</literal></expr>                 )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"comment type=\"block\""</literal></expr>)</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name>tag</name> <operator>==</operator> <literal type="string">"comment type=\"line\""</literal></expr> )</condition><block type="pseudo"><block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return></block_content></block></if></if_stmt>
+    <return>return <expr><literal type="boolean">false</literal></expr>;</return>
+</block_content>}</block></function>
+
+
+<comment type="line">// Print an AST</comment>
+<comment type="line">// Preorder traversal that prints out leaf nodes only (tokens &amp; whitesapce)</comment>
+<comment type="line">//</comment>
+<function><type><name><name>std</name><operator>::</operator><name>ostream</name></name><modifier>&amp;</modifier></type> <name><name>AST</name><operator>::</operator><name>print</name></name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>ostream</name></name><modifier>&amp;</modifier></type> <name>out</name></decl></parameter>)</parameter_list> <specifier>const</specifier> <block>{<block_content>
+    <for>for <control>(<init><decl><type><name><name>std</name><operator>::</operator><name>list</name><argument_list type="generic">&lt;<argument><expr><name>AST</name><operator>*</operator></expr></argument>&gt;</argument_list><operator>::</operator><name>const_iterator</name></name></type> <name>i</name> <init>= <expr><call><name><name>child</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>!=</operator> <call><name><name>child</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name><operator>(</operator><operator>*</operator><name>i</name><operator>)</operator><operator>-&gt;</operator><name>nodeType</name></name> <operator>!=</operator> <name>category</name></expr>)</condition><block type="pseudo"><block_content>
+            <expr_stmt><expr><name>out</name> <operator>&lt;&lt;</operator> <name><operator>(</operator><operator>*</operator><name>i</name><operator>)</operator><operator>-&gt;</operator><name>text</name></name></expr>;</expr_stmt></block_content></block></if>   <comment type="line">//Token or whitespace node, print it</comment>
+        <else>else<block type="pseudo"><block_content>
+            <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>i</name><operator>)</operator><operator>-&gt;</operator><name>print</name></name><argument_list>(<argument><expr><name>out</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></else></if_stmt>    <comment type="line">//Category node, recursive call</comment>
+    </block_content>}</block></for>
+    <return>return <expr><name>out</name></expr>;</return>
+</block_content>}</block></function>
+
+
+<comment type="line">// Read in and construct AST</comment>
+<comment type="line">// REQUIRES: '&gt;' was previous charater read </comment>
+<comment type="line">//           &amp;&amp; this == new AST(category, "TagName")</comment>
+<comment type="line">//</comment>
+<function><type><name><name>std</name><operator>::</operator><name>istream</name></name><modifier>&amp;</modifier></type> <name><name>AST</name><operator>::</operator><name>read</name></name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>istream</name></name><modifier>&amp;</modifier></type> <name>in</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name>AST</name> <modifier>*</modifier></type><name>subtree</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>temp</name></decl>, <decl><type ref="prev"/><name>Lws</name></decl>, <decl><type ref="prev"/><name>Rws</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>char</name></type> <name>ch</name></decl>;</decl_stmt>
+    <if_stmt><if>if <condition>(<expr><operator>!</operator><call><name><name>in</name><operator>.</operator><name>eof</name></name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><call><name><name>in</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>ch</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></if></if_stmt>
+    <while>while <condition>(<expr><operator>!</operator><call><name><name>in</name><operator>.</operator><name>eof</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>ch</name> <operator>==</operator> <literal type="char">'&lt;'</literal></expr>)</condition> <block>{<block_content>                      <comment type="line">//Found a tag</comment>
+            <expr_stmt><expr><name>temp</name> <operator>=</operator> <call><name>readUntil</name><argument_list>(<argument><expr><name>in</name></expr></argument>, <argument><expr><literal type="char">'&gt;'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <if_stmt><if>if <condition>(<expr><name><name>temp</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>==</operator> <literal type="char">'/'</literal></expr>)</condition> <block>{<block_content>
+                <expr_stmt><expr><name>closeTag</name> <operator>=</operator> <name>temp</name></expr>;</expr_stmt>
+                <break>break;</break>                        <comment type="line">//Found close tag, stop recursion</comment>
+            </block_content>}</block></if></if_stmt>
+            <expr_stmt><expr><name>subtree</name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>category</name></expr></argument>, <argument><expr><name>temp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>               <comment type="line">//New subtree</comment>
+            <expr_stmt><expr><call><name><name>subtree</name><operator>-&gt;</operator><name>read</name></name><argument_list>(<argument><expr><name>in</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>                               <comment type="line">//Read it in</comment>
+            <expr_stmt><expr><call><name><name>in</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>ch</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><name>subtree</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>                        <comment type="line">//Add it to child</comment>
+        </block_content>}</block></if> <else>else <block>{<block_content>                                             <comment type="line">//Found a token</comment>
+            <expr_stmt><expr><name>temp</name> <operator>=</operator> <call><name><name>std</name><operator>::</operator><name>string</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><name>ch</name></expr></argument>)</argument_list></call> <operator>+</operator> <call><name>readUntil</name><argument_list>(<argument><expr><name>in</name></expr></argument>, <argument><expr><literal type="char">'&lt;'</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>  <comment type="line">//Read it in.</comment>
+            <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name></type> <name>tokenList</name> <init>= <expr><call><name>tokenize</name><argument_list>(<argument><expr><name>temp</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <for>for <control>(<init><decl><type><name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list><operator>::</operator><name>const_iterator</name></name></type> <name>i</name><init>=<expr><call><name><name>tokenList</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init>
+                 <condition><expr><name>i</name> <operator>!=</operator> <call><name><name>tokenList</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</condition>
+                 <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{<block_content>
+                <if_stmt><if>if <condition>(<expr><call><name>isspace</name><argument_list>(<argument><expr><operator>(</operator><operator>*</operator><name>i</name><operator>)</operator><index>[<expr><literal type="number">0</literal></expr>]</index></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+                    <expr_stmt><expr><name>subtree</name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>whitespace</name></expr></argument>, <argument><expr><operator>*</operator><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                </block_content>}</block></if> <else>else <block>{<block_content>
+                    <expr_stmt><expr><name>subtree</name> <operator>=</operator> <operator>new</operator> <call><name>AST</name><argument_list>(<argument><expr><name>token</name></expr></argument>, <argument><expr><operator>*</operator><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                </block_content>}</block></else></if_stmt>
+                <expr_stmt><expr><call><name><name>child</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><name>subtree</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            </block_content>}</block></for>
+            <expr_stmt><expr><name>ch</name> <operator>=</operator> <literal type="char">'&lt;'</literal></expr>;</expr_stmt>
+        </block_content>}</block></else></if_stmt>
+    </block_content>}</block></while>
+    <return>return <expr><name>in</name></expr>;</return>
+</block_content>}</block></function>
+
+
+
+<comment type="line">// Utilities for AST::read()</comment>
+
+<comment type="line">// Reads until a key is encountered.  Does not include ch.</comment>
+<comment type="line">// REQUIRES: in.open()</comment>
+<comment type="line">// ENSURES: RetVal[i] != key for all i.</comment>
+<function><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>readUntil</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>istream</name></name><modifier>&amp;</modifier></type> <name>in</name></decl></parameter>, <parameter><decl><type><name>char</name></type> <name>key</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>result</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>char</name></type> <name>ch</name></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>in</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>ch</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <while>while <condition>(<expr><operator>!</operator><call><name><name>in</name><operator>.</operator><name>eof</name></name><argument_list>()</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><name>ch</name> <operator>!=</operator> <name>key</name><operator>)</operator></expr>)</condition> <block>{<block_content>
+        <expr_stmt><expr><name>result</name> <operator>+=</operator> <name>ch</name></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name><name>in</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>ch</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    </block_content>}</block></while>
+    <return>return <expr><name>result</name></expr>;</return>
+</block_content>}</block></function>
+
+<comment type="line">// Converts escaped XML charaters back to charater form</comment>
+<comment type="line">// REQUIRES: s == "&amp;lt;"</comment>
+<comment type="line">// ENSURES:  RetVal == "&lt;"</comment>
+<function><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>unEscape</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>s</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>size_t</name></name></type> <name>pos</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <while>while <condition>(<expr><operator>(</operator><name>pos</name> <operator>=</operator> <call><name><name>s</name><operator>.</operator><name>find</name></name><argument_list>(<argument><expr><literal type="string">"&amp;gt;"</literal></expr></argument>)</argument_list></call><operator>)</operator>  <operator>!=</operator> <name><name>s</name><operator>.</operator><name>npos</name></name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><call><name><name>s</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><name>pos</name></expr></argument>, <argument><expr><literal type="number">4</literal></expr></argument>, <argument><expr><literal type="string">"&gt;"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></while>
+    <while>while <condition>(<expr><operator>(</operator><name>pos</name> <operator>=</operator> <call><name><name>s</name><operator>.</operator><name>find</name></name><argument_list>(<argument><expr><literal type="string">"&amp;lt;"</literal></expr></argument>)</argument_list></call><operator>)</operator>  <operator>!=</operator> <name><name>s</name><operator>.</operator><name>npos</name></name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><call><name><name>s</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><name>pos</name></expr></argument>, <argument><expr><literal type="number">4</literal></expr></argument>, <argument><expr><literal type="string">"&lt;"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></while>
+    <while>while <condition>(<expr><operator>(</operator><name>pos</name> <operator>=</operator> <call><name><name>s</name><operator>.</operator><name>find</name></name><argument_list>(<argument><expr><literal type="string">"&amp;amp;"</literal></expr></argument>)</argument_list></call><operator>)</operator> <operator>!=</operator> <name><name>s</name><operator>.</operator><name>npos</name></name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><call><name><name>s</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><name>pos</name></expr></argument>, <argument><expr><literal type="number">5</literal></expr></argument>, <argument><expr><literal type="string">"&amp;"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></while>
+    <return>return <expr><name>s</name></expr>;</return>
+</block_content>}</block></function>
+
+<comment type="line">// Given: s == "   a + c  "</comment>
+<comment type="line">// RetVal == {"   ", "a", " ", "+", "c", " "}</comment>
+<function><type><name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name></type> <name>tokenize</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>s</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name></type> <name>result</name></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>temp</name> <init>= <expr><literal type="string">""</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>unsigned</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <while>while <condition>(<expr><name>i</name> <operator>&lt;</operator> <call><name><name>s</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content>
+        <while>while <condition>(<expr><call><name>isspace</name><argument_list>(<argument><expr><name><name>s</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><name>i</name> <operator>&lt;</operator> <call><name><name>s</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call><operator>)</operator></expr>)</condition> <block>{<block_content>
+            <expr_stmt><expr><call><name><name>temp</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><name><name>s</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><operator>++</operator><name>i</name></expr>;</expr_stmt>
+        </block_content>}</block></while>
+        <if_stmt><if>if <condition>(<expr><name>temp</name> <operator>!=</operator> <literal type="string">""</literal></expr>)</condition> <block>{<block_content>
+            <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><name>temp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>temp</name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+        </block_content>}</block></if></if_stmt>
+        <while>while <condition>(<expr><operator>!</operator><call><name>isspace</name><argument_list>(<argument><expr><name><name>s</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <operator>(</operator><name>i</name> <operator>&lt;</operator> <call><name><name>s</name><operator>.</operator><name>length</name></name><argument_list>()</argument_list></call><operator>)</operator></expr>)</condition> <block>{<block_content>
+            <expr_stmt><expr><call><name><name>temp</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><name><name>s</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><operator>++</operator><name>i</name></expr>;</expr_stmt>
+        </block_content>}</block></while>
+        <if_stmt><if>if <condition>(<expr><name>temp</name> <operator>!=</operator> <literal type="string">""</literal></expr>)</condition> <block>{<block_content>
+            <expr_stmt><expr><call><name><name>result</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><name>temp</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            <expr_stmt><expr><name>temp</name> <operator>=</operator> <literal type="string">""</literal></expr>;</expr_stmt>
+        </block_content>}</block></if></if_stmt>
+    </block_content>}</block></while>
+    <return>return <expr><name>result</name></expr>;</return>
+</block_content>}</block></function>
+    
+
+</unit>

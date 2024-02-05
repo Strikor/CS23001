@@ -1,0 +1,9 @@
+Looking at the profile table for sort.cpp (Bubble Sort) reveals that repeatedly calling
+the vector values take the longest time but this isn't a bottle necks as it's time
+isn't due to inefficency, but rather the the sheere amount of times it's called.
+This is just inherant to bubble sort and really can't be helped. However within bubble
+sort there is the function LESS_THAN(int, int), this function is entirely pointless as
+it results in a massive amount of time spent initializing the function with temporary
+local variables and must the perform one simple action on them (the less than operator)
+This wastes time and can be removed with a noticable improvement in time taken to
+run the program.

@@ -1,0 +1,24 @@
+ 12:49:59 up 62 days, 22:42, 22 users,  load average: 0.79, 0.67, 0.67
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+spalomin pts/0    174.104.98.158   11:45    1:02m  0.05s  0.05s -bash
+mglinsk1 pts/1    10.32.0.208      12:45   31.00s  0.05s  0.05s -bash
+rsourave pts/13   10.32.0.201      12:10   39:14   0.04s  0.04s -bash
+abryden1 pts/14   10.32.0.220      12:10   15:59   0.05s  0.05s -bash
+dferran2 pts/15   10.32.0.216      12:10    3.00s  0.26s  0.24s -bash
+alatess1 pts/16   10.32.0.212      12:10    2.00s  0.11s  0.11s -bash
+jlopez20 pts/18   10.32.0.218      12:11    4.00s  0.09s  0.09s -bash
+mshreff4 pts/19   10.32.0.223      12:11    7.00s  0.10s  0.10s -bash
+jkrizan  pts/20   10.32.0.202      12:11    4:20   0.07s  0.07s -bash
+jdunay2  pts/21   10.32.0.210      12:23    7.00s  0.13s  0.13s -bash
+dash2    pts/22   10.32.0.217      12:11    3:14   0.08s  0.08s -bash
+tdenvir  pts/23   10.32.0.207      12:12   31.00s  0.09s  0.09s -bash
+srai     pts/30   10.14.200.223    12:19    9:11   0.13s  0.13s -bash
+gmingle  pts/31   10.14.196.107    12:20   29:47   0.03s  0.03s -bash
+gmingle  pts/32   10.14.196.107    12:21    5:03   0.09s  0.09s -bash
+drusse29 pts/33   65.26.145.95     12:41    7:59   0.09s  0.03s nano WordList.cpp
+akoiral2 pts/24   10.14.86.172     12:12   17.00s  0.20s  0.20s -bash
+tdrewek  pts/25   10.14.204.210    12:12    3:43   0.08s  0.08s -bash
+jgraha45 pts/26   10.32.0.213      12:13    7.00s  0.08s  0.01s w
+tsuizu   pts/27   10.32.0.214      12:13    7.00s  0.11s  0.11s -bash
+rsourave pts/28   10.32.0.201      12:13    6.00s  0.11s  0.11s -bash
+csmit330 pts/29   10.14.205.70     12:15    7.00s  0.06s  0.06s -bash

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++" filename="sort.cpp"><comment type="block" format="doxygen">/**
+ * @brief  Application to run sorting algorithms on random int data
+ *
+ * @author Dale Haverstock
+ * @date   2012-04-19
+ */</comment>
+
+<comment type="line">//==============================================================================</comment>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"sort_lib.h"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;iostream&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;iomanip&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;vector&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;cstdlib&gt;</cpp:file></cpp:include>
+
+<comment type="line">//==============================================================================</comment>
+<comment type="line">// Using declarations</comment>
+<using>using <name><name>std</name><operator>::</operator><name>string</name></name>;</using>
+<using>using <name><name>std</name><operator>::</operator><name>vector</name></name>;</using>
+<using>using <name><name>std</name><operator>::</operator><name>cout</name></name>;</using>
+<using>using <name><name>std</name><operator>::</operator><name>cerr</name></name>;</using>
+
+<comment type="line">//==============================================================================</comment>
+<comment type="line">// Function declarations</comment>
+<function_decl><type><name>void</name></type> <name>process_command_line</name><parameter_list>(<parameter><decl><type><name>Options</name><modifier>&amp;</modifier></type> <name>opts</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name>char</name><modifier>*</modifier></type> <name><name>argv</name><index>[]</index></name></decl></parameter>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>generate_random_data</name><parameter_list>(<parameter><decl><type><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>data</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>seed</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>mod</name></decl></parameter>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>output_data</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>output_usage_and_exit</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>string</name><modifier>&amp;</modifier></type> <name>cmd</name></decl></parameter>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>output_error_and_exit</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>string</name><modifier>&amp;</modifier></type> <name>msg</name></decl></parameter>)</parameter_list>;</function_decl>
+
+<comment type="line">//==============================================================================</comment>
+<function><type><name>int</name></type> <name>main</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name>char</name><modifier>*</modifier></type> <name><name>argv</name><index>[]</index></name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+    <comment type="line">// Options container</comment>
+    <decl_stmt><decl><type><name>Options</name></type> <name>opts</name></decl>;</decl_stmt>
+
+    <comment type="line">// Get values from the command line, opts may be changed</comment>
+    <expr_stmt><expr><call><name>process_command_line</name><argument_list>(<argument><expr><name>opts</name></expr></argument>, <argument><expr><name>argc</name></expr></argument>, <argument><expr><name>argv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Generate data</comment>
+    <decl_stmt><decl><type><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name></type> <name>data</name></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name>generate_random_data</name><argument_list>(<argument><expr><name>data</name></expr></argument>, <argument><expr><name><name>opts</name><operator>.</operator><name>_data_size</name></name></expr></argument>, <argument><expr><name><name>opts</name><operator>.</operator><name>_seed</name></name></expr></argument>, <argument><expr><name><name>opts</name><operator>.</operator><name>_mod</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Output data before sorting</comment>
+    <if_stmt><if>if<condition>(<expr><name><name>opts</name><operator>.</operator><name>_output_data</name></name></expr>)</condition>
+        <block>{<block_content> <expr_stmt><expr><name>cout</name> <operator>&lt;&lt;</operator> <literal type="string">"\nData Before: "</literal></expr>;</expr_stmt> <expr_stmt><expr><call><name>output_data</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if></if_stmt> 
+
+    <comment type="line">// Sort, if a sort was specified, there is no default</comment>
+    <if_stmt><if>if <condition>(<expr><name><name>opts</name><operator>.</operator><name>_quick_sort</name></name></expr>)</condition>     <block>{<block_content> <expr_stmt><expr><call><name>quick_sort</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>      </block_content>}</block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name><name>opts</name><operator>.</operator><name>_selection_sort</name></name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><call><name>selection_sort</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>  </block_content>}</block></if></if_stmt>
+    <if_stmt><if>if <condition>(<expr><name><name>opts</name><operator>.</operator><name>_bubble_sort</name></name></expr>)</condition>    <block>{<block_content> <expr_stmt><expr><call><name>bubble_sort</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>     </block_content>}</block></if></if_stmt>
+    <if_stmt><if>if <condition>( <expr><operator>!</operator><name><name>opts</name><operator>.</operator><name>_quick_sort</name></name>      <operator>&amp;&amp;</operator>
+         <operator>!</operator><name><name>opts</name><operator>.</operator><name>_selection_sort</name></name>  <operator>&amp;&amp;</operator>
+         <operator>!</operator><name><name>opts</name><operator>.</operator><name>_bubble_sort</name></name></expr>  )</condition>
+        <block>{<block_content> <expr_stmt><expr><call><name>output_error_and_exit</name><argument_list>(<argument><expr><literal type="string">"No sort specified."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if></if_stmt>
+
+    <comment type="line">// Output data after sorting</comment>
+    <if_stmt><if>if<condition>(<expr><name><name>opts</name><operator>.</operator><name>_output_sorted_data</name></name></expr>)</condition>
+        <block>{<block_content> <expr_stmt><expr><name>cout</name> <operator>&lt;&lt;</operator> <literal type="string">"\nData After: "</literal></expr>;</expr_stmt> <expr_stmt><expr><call><name>output_data</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if></if_stmt> 
+
+    <return>return <expr><literal type="number">0</literal></expr>;</return>
+</block_content>}</block></function>
+
+<comment type="line">//==============================================================================</comment>
+<function><type><name>void</name></type> <name>generate_random_data</name><parameter_list>(<parameter><decl><type><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>vec</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>size</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>seed</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>mod</name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+    <comment type="line">// Resize vector</comment>
+    <expr_stmt><expr><call><name><name>vec</name><operator>.</operator><name>resize</name></name><argument_list>(<argument><expr><name>size</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Set random number generator seed</comment>
+    <expr_stmt><expr><call><name>srandom</name><argument_list>(<argument><expr><cast type="static">static_cast<argument_list type="generic">&lt;<argument><expr><name>unsigned</name> <name>int</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>seed</name></expr></argument>)</argument_list></cast></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// Put random values in vector</comment>
+    <for>for <control>(<init><decl><type><name><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>size_type</name></name></type> <name>idx</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>idx</name> <operator>&lt;</operator> <call><name><name>vec</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>idx</name></expr></incr>)</control>
+    <block>{<block_content>
+        <if_stmt><if>if<condition>(<expr><name>mod</name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><name><name>vec</name><index>[<expr><name>idx</name></expr>]</index></name> <operator>=</operator> <call><name>random</name><argument_list>()</argument_list></call> <operator>%</operator> <name>mod</name></expr>;</expr_stmt> </block_content>}</block></if>
+        <else>else    <block>{<block_content> <expr_stmt><expr><name><name>vec</name><index>[<expr><name>idx</name></expr>]</index></name> <operator>=</operator> <call><name>random</name><argument_list>()</argument_list></call></expr>;</expr_stmt>       </block_content>}</block></else></if_stmt>
+    </block_content>}</block></for>
+</block_content>}</block></function>
+
+<comment type="line">//==============================================================================</comment>
+<function><type><name>void</name></type> <name>output_data</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><modifier>&amp;</modifier></type> <name>vec</name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+    <comment type="line">// Number of columns, column width</comment>
+    <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>cols</name>  <init>=  <expr><literal type="number">7</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>width</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>
+
+    <comment type="line">// Output vector elements</comment>
+    <for>for <control>(<init><decl><type><name><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>size_type</name></name></type> <name>idx</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>idx</name> <operator>&lt;</operator> <call><name><name>vec</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>idx</name></expr></incr>)</control>
+    <block>{<block_content>
+        <comment type="line">// Output newline to end row</comment>
+        <if_stmt><if>if <condition>( <expr><operator>!</operator> <operator>(</operator><name>idx</name> <operator>%</operator> <name>cols</name><operator>)</operator></expr> )</condition>
+           <block>{<block_content> <expr_stmt><expr><name>cout</name>  <operator>&lt;&lt;</operator> <literal type="string">"\n"</literal></expr>;</expr_stmt> </block_content>}</block></if></if_stmt>
+
+        <expr_stmt><expr><name>cout</name> <operator>&lt;&lt;</operator> <call><name><name>std</name><operator>::</operator><name>setw</name></name><argument_list>(<argument><expr><name>width</name></expr></argument>)</argument_list></call> <operator>&lt;&lt;</operator> <name><name>vec</name><index>[<expr><name>idx</name></expr>]</index></name> <operator>&lt;&lt;</operator> <literal type="string">" "</literal></expr>;</expr_stmt>
+    </block_content>}</block></for>
+
+    <expr_stmt><expr><name>cout</name> <operator>&lt;&lt;</operator> <literal type="char">'\n'</literal></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line">//==============================================================================</comment>
+<comment type="line">// Note:</comment>
+<comment type="line">//   * No check for C-string to int conversion success</comment>
+<comment type="line">//</comment>
+<function><type><name>void</name></type> <name>process_command_line</name><parameter_list>(<parameter><decl><type><name>Options</name><modifier>&amp;</modifier></type> <name>opts</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name>char</name><modifier>*</modifier></type> <name><name>argv</name><index>[]</index></name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+    <comment type="line">// Useage message if no command line args</comment>
+    <if_stmt><if>if <condition>(<expr><name>argc</name> <operator>==</operator> <literal type="number">1</literal></expr>)</condition>
+        <block>{<block_content> <expr_stmt><expr><call><name>output_usage_and_exit</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if></if_stmt>
+
+    <comment type="line">// Go through the argumets</comment>
+    <for>for <control>(<init><decl><type><name>int</name></type> <name>idx</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>idx</name> <operator>&lt;</operator> <name>argc</name></expr>;</condition> <incr><expr><operator>++</operator><name>idx</name></expr></incr>)</control>
+    <block>{<block_content>
+        <comment type="line">// Standard library string from C-string</comment>
+        <decl_stmt><decl><type><name>string</name></type> <name>opt</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr><name>idx</name></expr>]</index></name></expr></argument>)</argument_list></decl>;</decl_stmt>
+
+        <comment type="line">// Process the option</comment>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-h"</literal></expr>)</condition>   <block>{<block_content> <expr_stmt><expr><call><name>output_usage_and_exit</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-qs"</literal></expr>)</condition>  <block>{<block_content> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_quick_sort</name></name>         <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>  </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-ss"</literal></expr>)</condition>  <block>{<block_content> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_selection_sort</name></name>     <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>  </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-bs"</literal></expr>)</condition>  <block>{<block_content> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_bubble_sort</name></name>        <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>  </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-od"</literal></expr>)</condition>  <block>{<block_content> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_output_data</name></name>        <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>  </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-osd"</literal></expr>)</condition> <block>{<block_content> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_output_sorted_data</name></name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>  </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-sz"</literal></expr>)</condition>
+        <block>{<block_content>
+            <if_stmt><if>if <condition>(<expr><name>idx</name> <operator>+</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>argc</name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><operator>++</operator><name>idx</name></expr>;</expr_stmt> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_data_size</name></name> <operator>=</operator> <call><name>atoi</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr><name>idx</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if>
+            <else>else                <block>{<block_content> <expr_stmt><expr><call><name>output_error_and_exit</name><argument_list>(<argument><expr><literal type="string">"Value for -sz option is missing."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></else></if_stmt>
+        </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-rs"</literal></expr>)</condition>
+        <block>{<block_content>
+            <if_stmt><if>if <condition>(<expr><name>idx</name> <operator>+</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>argc</name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><operator>++</operator><name>idx</name></expr>;</expr_stmt> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_seed</name></name> <operator>=</operator> <call><name>atoi</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr><name>idx</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if>
+            <else>else                <block>{<block_content> <expr_stmt><expr><call><name>output_error_and_exit</name><argument_list>(<argument><expr><literal type="string">"Value for -rs option is missing."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></else></if_stmt>
+        </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>(<expr><name>opt</name> <operator>==</operator> <literal type="string">"-mod"</literal></expr>)</condition>
+        <block>{<block_content>
+            <if_stmt><if>if <condition>(<expr><name>idx</name> <operator>+</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>argc</name></expr>)</condition> <block>{<block_content> <expr_stmt><expr><operator>++</operator><name>idx</name></expr>;</expr_stmt> <expr_stmt><expr><name><name>opts</name><operator>.</operator><name>_mod</name></name> <operator>=</operator> <call><name>atoi</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr><name>idx</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></if>
+            <else>else                <block>{<block_content> <expr_stmt><expr><call><name>output_error_and_exit</name><argument_list>(<argument><expr><literal type="string">"Value for -mod option is missing."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></else></if_stmt>
+        </block_content>}</block></if></if_stmt>
+        <if_stmt><if>if <condition>( <expr><operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-h"</literal><operator>)</operator>   <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-qs"</literal><operator>)</operator>  <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-ss"</literal><operator>)</operator>  <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-bs"</literal><operator>)</operator>  <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-od"</literal><operator>)</operator>  <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-osd"</literal><operator>)</operator> <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-sz"</literal><operator>)</operator>  <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-rs"</literal><operator>)</operator>  <operator>&amp;&amp;</operator>
+             <operator>(</operator><name>opt</name> <operator>!=</operator> <literal type="string">"-mod"</literal><operator>)</operator></expr> )</condition>
+        <block>{<block_content>
+           <expr_stmt><expr><call><name>output_error_and_exit</name><argument_list>(<argument><expr><call><name>string</name><argument_list>(<argument><expr><literal type="string">"Error: Bad option: "</literal></expr></argument>)</argument_list></call> <operator>+</operator> <name>opt</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        </block_content>}</block></if></if_stmt>
+    </block_content>}</block></for>
+</block_content>}</block></function>
+
+<comment type="line">//==============================================================================</comment>
+<function><type><name>void</name></type> <name>output_usage_and_exit</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>string</name><modifier>&amp;</modifier></type> <name>cmd</name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+    <expr_stmt><expr><name>cout</name> <operator>&lt;&lt;</operator> 
+       <literal type="string">"Usage: "</literal> <operator>&lt;&lt;</operator> <name>cmd</name> <operator>&lt;&lt;</operator> <literal type="string">" [options]\n"</literal>
+       <literal type="string">"  Options:\n"</literal>
+       <literal type="string">"     -sz  int  The number of data items\n"</literal>
+       <literal type="string">"     -rs  int  The random number generator seed\n"</literal>
+       <literal type="string">"     -mod int  The mod value for random numbers\n"</literal>
+       <literal type="string">"     -od       Output data to be sorted\n"</literal>
+       <literal type="string">"     -osd      Output sorted data\n"</literal>
+       <literal type="string">"     -qs       Use quick sort\n"</literal>
+       <literal type="string">"     -ss       Use selection sort\n"</literal>
+       <literal type="string">"     -bs       Use bubble sort\n"</literal>
+       <literal type="string">"     -h        This message\n"</literal>
+       <literal type="string">"\n"</literal>
+       <literal type="string">"  A sort must be specified, there is no default sort.\n"</literal>
+       <literal type="string">"  If more than 1 sort is specified then the first sort\n"</literal>
+       <literal type="string">"  specified from the following order will be done.\n"</literal>
+       <literal type="string">"     1. quick\n"</literal>
+       <literal type="string">"     2. selection\n"</literal>
+       <literal type="string">"     3. bubble\n"</literal></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+<comment type="line">//==============================================================================</comment>
+<function><type><name>void</name></type> <name>output_error_and_exit</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>string</name><modifier>&amp;</modifier></type> <name>msg</name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+    <expr_stmt><expr><name>cerr</name> <operator>&lt;&lt;</operator> <literal type="string">"Error: "</literal> <operator>&lt;&lt;</operator> <name>msg</name> <operator>&lt;&lt;</operator> <literal type="string">"\n"</literal></expr>;</expr_stmt>
+
+    <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></function>
+
+</unit>
